@@ -1,0 +1,5 @@
+- name: Install and configure Logstash
+  hosts: all
+  become: true
+  roles:
+    - logstash

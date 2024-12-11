@@ -1,0 +1,14 @@
+input {
+  beats {
+    port => 24081
+    host => "0.0.0.0"
+    codec => json
+    tags => [ 'access', 'beats' ]
+  }
+  beats {
+    port => 24082
+    host => "0.0.0.0"
+    codec => json
+    tags => [  'access', 'beats' ]
+  }
+}

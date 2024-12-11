@@ -1,0 +1,19 @@
+- name: Copy input, filter, and output configuration files
+  ansible.builtin.template:
+    src: '{{ item }}.conf.j2'
+    dest: '/etc/logstash/conf.d/{{ item }}.conf'
+    owner: root
+    group: root
+    mode: '0644'
+    validate: /usr/share/logstash/bin/logstash -t -f %s
+  loop:
+    - 1_post_logs_input
+    #- 2_post_logs_filter #Copy filter local
+    - 3_post_logs_output
+  notify: restart logstash
+  tags: logstash
+
+- name: Copy Logstash filter configuration
+  copy:
+    src: ../Files_Server/2_post_logs_filter.conf #Your puth to file config
+    dest: /etc/logstash/conf.d/2_post_logs_filter.conf

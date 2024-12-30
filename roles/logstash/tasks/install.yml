@@ -1,29 +1,28 @@
-- name: Ensure required dependencies are installed
+---
+- name: Install dependencies for repository installation
   ansible.builtin.apt:
-    name:
-      - apt-transport-https
-      - wget
-      - gnupg
+    name: "{{ dependencies }}"
     state: present
 
-- name: Add Elastic GPG key
+- name: Add Elastic GPG key for repository installation
   ansible.builtin.shell: |
-    wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor -o /usr/share/keyrings/elastic-keyring.gpg
+    wget -qO - {{ elastic_gpg_url }} | gpg --dearmor -o {{ gpg_keyring_path }}
   args:
-    creates: /usr/share/keyrings/elastic-keyring.gpg
+    creates: "{{ gpg_keyring_path }}"
 
-- name: Add Elastic repository to sources list
+- name: Add Elastic repository for Filebeat
   ansible.builtin.copy:
-    dest: /etc/apt/sources.list.d/elastic-8.x.list
-    content: |
-      deb [signed-by=/usr/share/keyrings/elastic-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main
+    dest: "{{ elastic_repo_file }}"
+    content: "{{ elastic_repo_content }}"
 
-
-- name: Install Logstash
+- name: Update apt cache
   ansible.builtin.apt:
-    name: logstash
+    update_cache: true
+
+- name: Install Filebeat from the repository
+  ansible.builtin.apt:
+    name: "logstash={{ logstash_version }}"
     state: present
-    update_cache: yes
 
 - name: Ensure Logstash is enabled and started
   ansible.builtin.systemd:

@@ -1,3 +1,24 @@
 elastic_gpg_key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
 elastic_repo: "https://artifacts.elastic.co/packages/8.x/apt"
 elastic_version: "8.16.1"
+
+
+# Dependencies for repository installation
+dependencies:
+  - apt-transport-https
+  - wget
+  - gnupg
+
+# Elastic GPG key URL and paths
+elastic_gpg_url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+gpg_keyring_path: "/usr/share/keyrings/elastic-keyring.gpg"
+
+# Elastic repository configuration
+elastic_repo_file: "/etc/apt/sources.list.d/elastic-8.x.list"
+elastic_repo_content: |
+  deb [signed-by=/usr/share/keyrings/elastic-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main
+
+# Filebeat installation method and version
+logstash_install_method: "repo" # Change to "deb" for DEB package installation
+logstash_version: "8.16.0"
+logstash_deb_url: "https://artifacts.elastic.co/downloads/beats/logstash/logstash-{{ logstash_version }}-amd64.deb"
